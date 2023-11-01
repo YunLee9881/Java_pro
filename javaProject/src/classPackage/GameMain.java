@@ -31,6 +31,8 @@ import javax.swing.JSplitPane;
 import javax.swing.JSpinner;
 import javax.swing.JTree;
 import javax.swing.JTable;
+import net.miginfocom.swing.MigLayout;
+import javax.swing.JDesktopPane;
 
 public class GameMain extends JFrame {
 
@@ -55,6 +57,8 @@ public class GameMain extends JFrame {
 
 	static public JProgressBar HungerGuage;
 	static public JProgressBar LikeGuage;
+	private JPanel mainPanel;
+	private JTextField txtVDamagochi;
 
 	/**
 	 * Launch the application.
@@ -76,6 +80,7 @@ public class GameMain extends JFrame {
 	 * Create the application.
 	 */
 	public GameMain() {
+		
 		initialize();
 	}
 
@@ -91,142 +96,100 @@ public class GameMain extends JFrame {
 		frmTamagochiProject.setBounds(100, 100, 1024, 768);
 		frmTamagochiProject.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		JPanel panel = new JPanel();
-		frmTamagochiProject.getContentPane().add(panel, BorderLayout.CENTER);
-		panel.setLayout(new FormLayout(new ColumnSpec[] {
-				ColumnSpec.decode("15px"),
-				FormSpecs.DEFAULT_COLSPEC,
-				ColumnSpec.decode("54px:grow"),
-				ColumnSpec.decode("10px"),
-				ColumnSpec.decode("2px:grow"),
-				ColumnSpec.decode("5px:grow"),
-				ColumnSpec.decode("10px"),
-				ColumnSpec.decode("24px"),
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("40px:grow"),
-				ColumnSpec.decode("15px"),
-				ColumnSpec.decode("54px:grow"),
-				ColumnSpec.decode("10px"),
-				ColumnSpec.decode("54px:grow"),
-				FormSpecs.DEFAULT_COLSPEC,
-				ColumnSpec.decode("15px"),},
-			new RowSpec[] {
-				RowSpec.decode("default:grow"),
-				RowSpec.decode("4dlu:grow"),
-				RowSpec.decode("23px:grow"),
-				RowSpec.decode("default:grow"),
-				RowSpec.decode("4dlu:grow"),
-				RowSpec.decode("4dlu:grow"),
-				RowSpec.decode("4dlu:grow"),
-				RowSpec.decode("8dlu"),
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("192px:grow"),
-				RowSpec.decode("58px:grow"),
-				RowSpec.decode("4dlu:grow"),
-				RowSpec.decode("default:grow"),
-				RowSpec.decode("4dlu:grow"),
-				RowSpec.decode("default:grow"),
-				RowSpec.decode("4dlu:grow"),
-				RowSpec.decode("default:grow"),
-				RowSpec.decode("4dlu:grow"),
-				RowSpec.decode("default:grow"),
-				RowSpec.decode("4dlu:grow"),
-				RowSpec.decode("default:grow"),
-				RowSpec.decode("4dlu:grow"),
-				RowSpec.decode("default:grow"),
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				RowSpec.decode("4dlu:grow"),
-				RowSpec.decode("default:grow"),
-				RowSpec.decode("4dlu:grow"),
-				RowSpec.decode("default:grow"),
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("default:grow"),
-				RowSpec.decode("4dlu:grow"),
-				RowSpec.decode("default:grow"),
-				RowSpec.decode("4dlu:grow"),
-				RowSpec.decode("default:grow"),}));
+		JPanel gamePanel = new JPanel();
+		frmTamagochiProject.getContentPane().add(gamePanel, BorderLayout.CENTER);
+		gamePanel.setLayout(null);
 
 		IconImage = new JLabel("");
+		IconImage.setBounds(64, 24, 128, 128);
 		IconImage.setHorizontalAlignment(SwingConstants.CENTER);
 		IconImage.setIcon(new ImageIcon(GameMain.class.getResource("/classPackage/img/characterBabyFormIcon.png")));
-		panel.add(IconImage, "3, 3, 1, 7, center, center");
+		gamePanel.add(IconImage);
 
 		NAME = new JTextField();
+		NAME.setBounds(202, 60, 116, 33);
 		NAME.setHorizontalAlignment(SwingConstants.CENTER);
 		NAME.setBackground(SystemColor.desktop);
 		NAME.setEditable(false);
 		NAME.setFont(new Font("±¼¸²", Font.BOLD, 18));
 		NAME.setText("\uC774\uB984 :");
-		panel.add(NAME, "4, 5, 2, 2, fill, fill");
+		gamePanel.add(NAME);
 		NAME.setColumns(10);
 
 		nameField = new JTextField();
+		nameField.setBounds(318, 60, 120, 33);
 		nameField.setHorizontalAlignment(SwingConstants.CENTER);
 		nameField.setFont(new Font("ÇÑÄÄ ¸»¶û¸»¶û Bold", Font.BOLD, 18));
 		nameField.setText(playerName);
 		nameField.setEditable(false);
-		panel.add(nameField, "6, 5, 2, 2, fill, fill");
+		gamePanel.add(nameField);
 		nameField.setColumns(10);
 
 		Like = new JTextField();
+		Like.setBounds(472, 60, 145, 33);
 		Like.setFont(new Font("±¼¸²", Font.BOLD, 18));
 		Like.setText("\uD638\uAC10\uB3C4 : ");
 		Like.setHorizontalAlignment(SwingConstants.CENTER);
-		panel.add(Like, "10, 5, 1, 2, fill, default");
+		gamePanel.add(Like);
 		Like.setColumns(10);
 
 		LikeGuage = new JProgressBar();
+		LikeGuage.setBounds(632, 60, 300, 33);
 		LikeGuage.setBackground(SystemColor.desktop);
 		LikeGuage.setFont(new Font("ÈÞ¸Õ¸ðÀ½T", Font.BOLD, 18));
 		LikeGuage.setForeground(Color.RED);
 		LikeGuage.setStringPainted(true);
 		LikeGuage.setValue(36);
-		panel.add(LikeGuage, "12, 5, 3, 2");
+		gamePanel.add(LikeGuage);
 
 		Weight = new JTextField();
+		Weight.setBounds(202, 93, 116, 33);
 		Weight.setHorizontalAlignment(SwingConstants.CENTER);
 		Weight.setBackground(SystemColor.desktop);
 		Weight.setEditable(false);
 		Weight.setFont(new Font("±¼¸²", Font.BOLD, 18));
 		Weight.setText("\uBAB8\uBB34\uAC8C :");
-		panel.add(Weight, "4, 7, 2, 2, fill, fill");
+		gamePanel.add(Weight);
 		Weight.setColumns(10);
 
 		weightField = new JTextField();
+		weightField.setBounds(318, 93, 120, 33);
 		weightField.setHorizontalAlignment(SwingConstants.CENTER);
 		weightField.setFont(new Font("ÇÑÄÄ ¸»¶û¸»¶û Bold", Font.BOLD, 18));
 		weightField.setText(weight+"kg");
 		weightField.setEditable(false);
 		weightField.setColumns(10);
-		panel.add(weightField, "6, 7, 2, 2, fill, default");
+		gamePanel.add(weightField);
 
 		Hunger = new JTextField();
+		Hunger.setBounds(472, 93, 145, 33);
 		Hunger.setText("\uD3EC\uB9CC\uAC10 : ");
 		Hunger.setFont(new Font("±¼¸²", Font.BOLD, 18));
 		Hunger.setHorizontalAlignment(SwingConstants.CENTER);
-		panel.add(Hunger, "10, 7, 1, 2, right, default");
+		gamePanel.add(Hunger);
 		Hunger.setColumns(10);
 
 		HungerGuage = new JProgressBar();
+		HungerGuage.setBounds(632, 93, 300, 33);
 		HungerGuage.setFont(new Font("ÈÞ¸Õ¸ðÀ½T", Font.BOLD, 18));
 		HungerGuage.setBackground(SystemColor.desktop);
 		HungerGuage.setForeground(new Color(102, 51, 51));
 		HungerGuage.setStringPainted(true);
 		HungerGuage.setValue(40);
-		panel.add(HungerGuage, "12, 7, 3, 2");
+		gamePanel.add(HungerGuage);
 
 		CharacterImage = new JLabel("");
+		CharacterImage.setBounds(43, 163, 916, 350);
 		CharacterImage.setLabelFor(CharacterImage);
 		CharacterImage.setBackground(Color.WHITE);
 		CharacterImage.setHorizontalAlignment(SwingConstants.CENTER);
 		CharacterImage.setToolTipText("");
 		CharacterImage.setForeground(Color.WHITE);
 		CharacterImage.setIcon(new ImageIcon(GameMain.class.getResource("/classPackage/img/characterBabyForm.png")));
-		panel.add(CharacterImage, "3, 11, 12, 9");
+		gamePanel.add(CharacterImage);
 
 		SleepBUtton = new JButton("\uC7AC\uC6B0\uAE30");
+		SleepBUtton.setBounds(43, 559, 159, 130);
 		SleepBUtton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -236,9 +199,10 @@ public class GameMain extends JFrame {
 			}
 		});
 		SleepBUtton.setFont(new Font("HY¿±¼­M", Font.BOLD, 25));
-		panel.add(SleepBUtton, "3, 24, 1, 11");
+		gamePanel.add(SleepBUtton);
 
 		FeedButton = new JButton("\uBC25\uC8FC\uAE30");
+		FeedButton.setBounds(438, 559, 179, 130);
 		FeedButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -257,17 +221,20 @@ public class GameMain extends JFrame {
 			}
 		});
 		FeedButton.setFont(new Font("HY¿±¼­M", Font.BOLD, 25));
-		panel.add(FeedButton, "8, 24, 3, 11");
+		gamePanel.add(FeedButton);
 
 		CleanButton = new JButton("\uCCAD\uC18C\uD558\uAE30");
+		CleanButton.setBounds(632, 559, 158, 130);
 		CleanButton.setFont(new Font("HY¿±¼­M", Font.BOLD, 25));
-		panel.add(CleanButton, "12, 24, 1, 11");
+		gamePanel.add(CleanButton);
 
 		InformButton = new JButton("\uC124\uC815");
+		InformButton.setBounds(800, 559, 159, 130);
 		InformButton.setFont(new Font("HY¿±¼­M", Font.BOLD, 25));
-		panel.add(InformButton, "14, 24, 1, 11");
+		gamePanel.add(InformButton);
 
 		SSDAMButton = new JButton("\uC4F0\uB2E4\uB4EC\uAE30");
+		SSDAMButton.setBounds(212, 559, 216, 130);
 		SSDAMButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -279,24 +246,56 @@ public class GameMain extends JFrame {
 			}
 		});
 		SSDAMButton.setFont(new Font("HY¿±¼­M", Font.BOLD, 25));
-		panel.add(SSDAMButton, "5, 24, 2, 11");
+		gamePanel.add(SSDAMButton);
+		
+		mainPanel = new JPanel();
+		mainPanel.setBounds(0, 0, 102, 712);
+		frmTamagochiProject.getContentPane().add(mainPanel, BorderLayout.SOUTH);
+		mainPanel.setBackground(UIManager.getColor("Button.background"));
+		mainPanel.setLayout(null);
+		
+		txtVDamagochi = new JTextField();
+		txtVDamagochi.setFont(new Font("HYÇìµå¶óÀÎM", Font.BOLD, 52));
+		txtVDamagochi.setText("V - Damagochi");
+		txtVDamagochi.setHorizontalAlignment(SwingConstants.CENTER);
+		txtVDamagochi.setBounds(212, 100, 600, 200);
+		mainPanel.add(txtVDamagochi);
+		txtVDamagochi.setColumns(10);
+		
+		JButton btnNewButton = new JButton("\uC2DC\uC791");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+//				gamePanel.Con
+			}
+		});
+		btnNewButton.setFont(new Font("ÈÞ¸Õ¸ðÀ½T", Font.BOLD, 22));
+		btnNewButton.setBounds(387, 400, 250, 50);
+		mainPanel.add(btnNewButton);
+		
+		JButton button = new JButton("\uBD88\uB7EC\uC624\uAE30");
+		button.setFont(new Font("ÈÞ¸Õ¸ðÀ½T", Font.BOLD, 22));
+		button.setBounds(387, 486, 250, 50);
+		mainPanel.add(button);
+		
+		JButton button_1 = new JButton("\uC885\uB8CC");
+		button_1.setFont(new Font("ÈÞ¸Õ¸ðÀ½T", Font.BOLD, 22));
+		button_1.setBounds(387, 572, 250, 50);
+		mainPanel.add(button_1);
 
 		
 		st.start();
 	}
-
 }
 
 class SystemThread extends Thread {
 	// ¹Ýº¹ÇÒ ½Ã°£
-	int time = 10000;
+	int time = 7777;
 
 	// °ÔÀÌÁö ÇöÀç°ª º¯¼ö
 	int curLike;
 	int curHung;
 
 	public void run() {
-		System.out.println("¹è°íÆÄÀ×");
 		while (true) {
 
 			try {
