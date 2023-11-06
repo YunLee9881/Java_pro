@@ -33,12 +33,15 @@ import javax.swing.JTree;
 import javax.swing.JTable;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JDesktopPane;
+import java.awt.Component;
+import javax.swing.JTextArea;
 
 public class GameMain extends JFrame {
 
 	public JFrame frmTamagochiProject;
+	
 	public int weight = 12;
-	public String playerName = "배고파";
+	static public String playerName = "배고파";
 	public JTextField NAME;
 	public JTextField Weight;
 	public JTextField nameField;
@@ -57,8 +60,16 @@ public class GameMain extends JFrame {
 
 	static public JProgressBar HungerGuage;
 	static public JProgressBar LikeGuage;
-	private JPanel mainPanel;
-	private JTextField txtVDamagochi;
+	static private JPanel mainPanel;
+	private JTextField txtVTamagochi;
+	private JPanel InputPanel;
+	private JTextField textField;
+	private JTextField nameInput;
+	private JTextField textField_1;
+	static JPanel gameOverPanel;
+	static JPanel gamePanel;
+	static public JTextField textField_2;
+	private JButton btnNewButton_1;
 
 	/**
 	 * Launch the application.
@@ -92,11 +103,12 @@ public class GameMain extends JFrame {
 		FeedButtonThread fbt = new FeedButtonThread();
 		
 		frmTamagochiProject = new JFrame();
+		frmTamagochiProject.setResizable(false);
 		frmTamagochiProject.setTitle("Tamagochi Project");
 		frmTamagochiProject.setBounds(100, 100, 1024, 768);
 		frmTamagochiProject.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		JPanel gamePanel = new JPanel();
+		gamePanel = new JPanel();
 		frmTamagochiProject.getContentPane().add(gamePanel, BorderLayout.CENTER);
 		gamePanel.setLayout(null);
 
@@ -258,22 +270,23 @@ public class GameMain extends JFrame {
 		
 		mainPanel = new JPanel();
 		mainPanel.setBounds(0, 0, 102, 712);
-		frmTamagochiProject.getContentPane().add(mainPanel, BorderLayout.SOUTH);
+		frmTamagochiProject.getContentPane().add(mainPanel, BorderLayout.CENTER);
 		mainPanel.setBackground(UIManager.getColor("Button.background"));
 		mainPanel.setLayout(null);
 		
-		txtVDamagochi = new JTextField();
-		txtVDamagochi.setFont(new Font("HY헤드라인M", Font.BOLD, 52));
-		txtVDamagochi.setText("V - Damagochi");
-		txtVDamagochi.setHorizontalAlignment(SwingConstants.CENTER);
-		txtVDamagochi.setBounds(212, 100, 600, 200);
-		mainPanel.add(txtVDamagochi);
-		txtVDamagochi.setColumns(10);
+		txtVTamagochi = new JTextField();
+		txtVTamagochi.setFont(new Font("HY헤드라인M", Font.BOLD, 52));
+		txtVTamagochi.setText("V - Tamagochi");
+		txtVTamagochi.setHorizontalAlignment(SwingConstants.CENTER);
+		txtVTamagochi.setBounds(212, 100, 600, 200);
+		mainPanel.add(txtVTamagochi);
+		txtVTamagochi.setColumns(10);
 		
 		JButton btnNewButton = new JButton("\uC2DC\uC791");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				gamePanel.Con
+				mainPanel.setBounds(0,0,0,0);
+				InputPanel.setBounds(0, 0, 1024, 768);
 			}
 		});
 		btnNewButton.setFont(new Font("휴먼모음T", Font.BOLD, 22));
@@ -289,19 +302,101 @@ public class GameMain extends JFrame {
 		button_1.setFont(new Font("휴먼모음T", Font.BOLD, 22));
 		button_1.setBounds(387, 572, 250, 50);
 		mainPanel.add(button_1);
-
 		
-		st.start();
+		InputPanel = new JPanel();
+		frmTamagochiProject.getContentPane().add(InputPanel, BorderLayout.SOUTH);
+		InputPanel.setLayout(null);
+		
+		textField_1 = new JTextField();
+		textField_1.setFont(new Font("굴림", Font.BOLD, 18));
+		textField_1.setHorizontalAlignment(SwingConstants.CENTER);
+		textField_1.setForeground(Color.RED);
+		textField_1.setBackground(Color.WHITE);
+		textField_1.setColumns(0);
+		textField_1.setEditable(false);
+		textField_1.setText("\u203B\uB108\uBB34 \uAE38\uAC8C \uC4F0\uC9C0 \uB9D0\uC544\uC8FC\uC138\uC694");
+		textField_1.setBounds(268, 454, 600, 35);
+		InputPanel.add(textField_1);
+		
+		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setIcon(new ImageIcon(GameMain.class.getResource("/classPackage/img/characterBabyForm.png")));
+		lblNewLabel.setBounds(17, 209, 234, 300);
+		InputPanel.add(lblNewLabel);
+		
+		textField = new JTextField();
+		textField.setFont(new Font("굴림", Font.BOLD, 32));
+		textField.setText("\uCE90\uB9AD\uD130\uC758 \uC774\uB984\uC744 \uC785\uB825\uD574\uC8FC\uC138\uC694!");
+		textField.setHorizontalAlignment(SwingConstants.CENTER);
+		textField.setBounds(268, 271, 600, 93);
+		InputPanel.add(textField);
+		textField.setColumns(10);
+		
+		nameInput = new JTextField();
+		nameInput.setFont(new Font("굴림", Font.BOLD, 32));
+		nameInput.setHorizontalAlignment(SwingConstants.CENTER);
+		nameInput.setBounds(268, 366, 512, 93);
+		InputPanel.add(nameInput);
+		nameInput.setColumns(10);
+		
+		JButton nameCheakButton = new JButton("\uD655\uC778");
+		nameCheakButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				InputPanel.setBounds(0,0,0,0);
+				playerName = nameInput.getText();
+				nameField.setText(playerName);
+				gamePanel.setBounds(0, 0, 1024, 768);
+				SystemThread st = new SystemThread();
+			}
+		});
+		nameCheakButton.setFont(new Font("굴림", Font.BOLD, 28));
+		nameCheakButton.setBounds(778, 366, 93, 93);
+		InputPanel.add(nameCheakButton);
+		
+		gameOverPanel = new JPanel();
+		frmTamagochiProject.getContentPane().add(gameOverPanel, BorderLayout.EAST);
+		gameOverPanel.setLayout(null);
+		
+		btnNewButton_1 = new JButton("\uAC8C\uC784\uC885\uB8CC...");
+		btnNewButton_1.setBackground(Color.LIGHT_GRAY);
+		btnNewButton_1.setFont(new Font("굴림", Font.BOLD, 32));
+		btnNewButton_1.setBounds(362, 435, 300, 150);
+		gameOverPanel.add(btnNewButton_1);
+		
+		JLabel lblNewLabel_1 = new JLabel("GAME OVER");
+		lblNewLabel_1.setFont(new Font("Segoe Print", Font.BOLD, 98));
+		lblNewLabel_1.setForeground(Color.RED);
+		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_1.setBounds(17, 132, 984, 209);
+		gameOverPanel.add(lblNewLabel_1);
+		
+		textField_2 = new JTextField();
+		textField_2.setEditable(false);
+		textField_2.setFont(new Font("굴림", Font.PLAIN, 32));
+		textField_2.setForeground(Color.RED);
+		textField_2.setHorizontalAlignment(SwingConstants.CENTER);
+		textField_2.setBounds(0, 0, 1019, 727);
+		textField_2.setText("당신이 "+ playerName+"을(를) 죽였어!!!!!!!!!");
+		gameOverPanel.add(textField_2);
+		textField_2.setColumns(10);
 	}
 }
 
 class SystemThread extends Thread {
 	// 반복할 시간
-	int time = 7777;
+	int time = 3500;
 
 	// 게이지 현재값 변수
 	int curLike;
 	int curHung;
+	
+	
+
+	public SystemThread() {
+		start();
+	}
+
+
 
 	public void run() {
 		while (true) {
@@ -314,6 +409,11 @@ class SystemThread extends Thread {
 			curHung = GameMain.HungerGuage.getValue();
 			curHung -= 3;
 			GameMain.HungerGuage.setValue(curHung);
+			if(GameMain.HungerGuage.getValue() <= 0) {
+				GameMain.gamePanel.setBounds(0,0,0,0);
+				GameMain.gameOverPanel.setBounds(0, 0, 1024, 768);
+				GameMain.textField_2.setText("당신이 "+ GameMain.playerName+"을(를) 죽였어!!!!!!!!!");
+			}
 
 		}
 	}
@@ -321,6 +421,7 @@ class SystemThread extends Thread {
 
 class FeedButtonThread extends Thread {
 	int time = 500;
+	
 
 	public void run() {
 		try {
