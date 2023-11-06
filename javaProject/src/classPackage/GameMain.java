@@ -189,7 +189,7 @@ public class GameMain extends JFrame {
 		gamePanel.add(CharacterImage);
 
 		SleepBUtton = new JButton("\uC7AC\uC6B0\uAE30");
-		SleepBUtton.setBounds(43, 559, 159, 130);
+		SleepBUtton.setBounds(50, 550, 160, 130);
 		SleepBUtton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -202,7 +202,11 @@ public class GameMain extends JFrame {
 		gamePanel.add(SleepBUtton);
 
 		FeedButton = new JButton("\uBC25\uC8FC\uAE30");
-		FeedButton.setBounds(438, 559, 179, 130);
+		FeedButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		FeedButton.setBounds(420, 550, 160, 130);
 		FeedButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -224,17 +228,21 @@ public class GameMain extends JFrame {
 		gamePanel.add(FeedButton);
 
 		CleanButton = new JButton("\uCCAD\uC18C\uD558\uAE30");
-		CleanButton.setBounds(632, 559, 158, 130);
+		CleanButton.setBounds(605, 550, 160, 130);
 		CleanButton.setFont(new Font("HY¿±¼­M", Font.BOLD, 25));
 		gamePanel.add(CleanButton);
 
 		InformButton = new JButton("\uC124\uC815");
-		InformButton.setBounds(800, 559, 159, 130);
+		InformButton.setBounds(790, 550, 160, 130);
 		InformButton.setFont(new Font("HY¿±¼­M", Font.BOLD, 25));
 		gamePanel.add(InformButton);
 
 		SSDAMButton = new JButton("\uC4F0\uB2E4\uB4EC\uAE30");
-		SSDAMButton.setBounds(212, 559, 216, 130);
+		SSDAMButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		SSDAMButton.setBounds(235, 550, 160, 130);
 		SSDAMButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
