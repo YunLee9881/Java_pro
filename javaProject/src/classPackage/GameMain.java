@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.concurrent.TimeUnit;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -17,25 +16,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import javax.swing.JTextPane;
-import javax.swing.SwingConstants;
-
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.FormSpecs;
-import com.jgoodies.forms.layout.RowSpec;
-import javax.swing.UIManager;
 import javax.swing.JTextField;
-import javax.swing.DropMode;
-import javax.swing.JSplitPane;
-import javax.swing.JSpinner;
-import javax.swing.JTree;
-import javax.swing.JTable;
-import net.miginfocom.swing.MigLayout;
-import javax.swing.JDesktopPane;
-import java.awt.Component;
-import javax.swing.JTextArea;
-import java.awt.TextArea;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 
 public class GameMain extends JFrame {
 	public JFrame frmTamagochiProject;
@@ -70,10 +53,10 @@ public class GameMain extends JFrame {
 	static JPanel mainPanel;
 	static JPanel gameOverPanel;
 	static JPanel gamePanel;
-
-	static public JTextField YouKillChr;
-	private JButton GameExit;
-	private JTextField txtGameover;
+	
+	static public JButton GameExit;
+	static public JLabel YouKillChar;
+	static public JLabel TxTGameOver;
 
 	/**
 	 * Launch the application.
@@ -148,6 +131,57 @@ public class GameMain extends JFrame {
 		button_1.setFont(new Font("ÈÞ¸Õ¸ðÀ½T", Font.BOLD, 22));
 		button_1.setBounds(387, 572, 250, 50);
 		mainPanel.add(button_1);
+
+		inputPanel = new JPanel();
+		frmTamagochiProject.getContentPane().add(inputPanel, BorderLayout.CENTER);
+		inputPanel.setLayout(null);
+
+		textField_1 = new JTextField();
+		textField_1.setFont(new Font("±¼¸²", Font.BOLD, 18));
+		textField_1.setHorizontalAlignment(SwingConstants.CENTER);
+		textField_1.setForeground(Color.RED);
+		textField_1.setBackground(Color.WHITE);
+		textField_1.setColumns(0);
+		textField_1.setEditable(false);
+		textField_1.setText("\u203B\uB108\uBB34 \uAE38\uAC8C \uC4F0\uC9C0 \uB9D0\uC544\uC8FC\uC138\uC694");
+		textField_1.setBounds(268, 454, 600, 35);
+		inputPanel.add(textField_1);
+
+		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setIcon(new ImageIcon(GameMain.class.getResource("/classPackage/img/characterBabyForm.png")));
+		lblNewLabel.setBounds(17, 209, 234, 300);
+		inputPanel.add(lblNewLabel);
+
+		textField = new JTextField();
+		textField.setFont(new Font("±¼¸²", Font.BOLD, 32));
+		textField.setText("\uCE90\uB9AD\uD130\uC758 \uC774\uB984\uC744 \uC785\uB825\uD574\uC8FC\uC138\uC694!");
+		textField.setHorizontalAlignment(SwingConstants.CENTER);
+		textField.setBounds(268, 271, 600, 93);
+		inputPanel.add(textField);
+		textField.setColumns(10);
+
+		nameInput = new JTextField();
+		nameInput.setFont(new Font("±¼¸²", Font.BOLD, 32));
+		nameInput.setHorizontalAlignment(SwingConstants.CENTER);
+		nameInput.setBounds(268, 366, 512, 93);
+		inputPanel.add(nameInput);
+		nameInput.setColumns(10);
+
+		JButton nameCheakButton = new JButton("\uD655\uC778");
+		nameCheakButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				inputPanel.setVisible(false);
+				playerName = nameInput.getText();
+				nameField.setText(playerName);
+				gamePanel.setVisible(true);
+				SystemThread st = new SystemThread();
+			}
+		});
+		nameCheakButton.setFont(new Font("±¼¸²", Font.BOLD, 24));
+		nameCheakButton.setBounds(778, 366, 93, 93);
+		inputPanel.add(nameCheakButton);
 
 		gamePanel = new JPanel();
 		frmTamagochiProject.getContentPane().add(gamePanel, BorderLayout.CENTER);
@@ -310,56 +344,6 @@ public class GameMain extends JFrame {
 		SSDAMButton.setFont(new Font("HY¿±¼­M", Font.BOLD, 25));
 		gamePanel.add(SSDAMButton);
 
-		inputPanel = new JPanel();
-		frmTamagochiProject.getContentPane().add(inputPanel, BorderLayout.CENTER);
-		inputPanel.setLayout(null);
-
-		textField_1 = new JTextField();
-		textField_1.setFont(new Font("±¼¸²", Font.BOLD, 18));
-		textField_1.setHorizontalAlignment(SwingConstants.CENTER);
-		textField_1.setForeground(Color.RED);
-		textField_1.setBackground(Color.WHITE);
-		textField_1.setColumns(0);
-		textField_1.setEditable(false);
-		textField_1.setText("\u203B\uB108\uBB34 \uAE38\uAC8C \uC4F0\uC9C0 \uB9D0\uC544\uC8FC\uC138\uC694");
-		textField_1.setBounds(268, 454, 600, 35);
-		inputPanel.add(textField_1);
-
-		JLabel lblNewLabel = new JLabel("");
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setIcon(new ImageIcon(GameMain.class.getResource("/classPackage/img/characterBabyForm.png")));
-		lblNewLabel.setBounds(17, 209, 234, 300);
-		inputPanel.add(lblNewLabel);
-
-		textField = new JTextField();
-		textField.setFont(new Font("±¼¸²", Font.BOLD, 32));
-		textField.setText("\uCE90\uB9AD\uD130\uC758 \uC774\uB984\uC744 \uC785\uB825\uD574\uC8FC\uC138\uC694!");
-		textField.setHorizontalAlignment(SwingConstants.CENTER);
-		textField.setBounds(268, 271, 600, 93);
-		inputPanel.add(textField);
-		textField.setColumns(10);
-
-		nameInput = new JTextField();
-		nameInput.setFont(new Font("±¼¸²", Font.BOLD, 32));
-		nameInput.setHorizontalAlignment(SwingConstants.CENTER);
-		nameInput.setBounds(268, 366, 512, 93);
-		inputPanel.add(nameInput);
-		nameInput.setColumns(10);
-
-		JButton nameCheakButton = new JButton("\uD655\uC778");
-		nameCheakButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				inputPanel.setVisible(false);
-				playerName = nameInput.getText();
-				nameField.setText(playerName);
-				gamePanel.setVisible(true);
-				SystemThread st = new SystemThread();
-			}
-		});
-		nameCheakButton.setFont(new Font("±¼¸²", Font.BOLD, 24));
-		nameCheakButton.setBounds(778, 366, 93, 93);
-		inputPanel.add(nameCheakButton);
-
 		gameOverPanel = new JPanel();
 		frmTamagochiProject.getContentPane().add(gameOverPanel, BorderLayout.CENTER);
 		gameOverPanel.setLayout(null);
@@ -371,37 +355,29 @@ public class GameMain extends JFrame {
 			}
 		});
 
-		txtGameover = new JTextField();
-		txtGameover.setEditable(false);
-		txtGameover.setForeground(Color.RED);
-		txtGameover.setFont(new Font("Segoe Print", Font.BOLD, 98));
-		txtGameover.setHorizontalAlignment(SwingConstants.CENTER);
-		txtGameover.setBackground(SystemColor.menu);
-		txtGameover.setText("GameOver");
-		txtGameover.setBounds(17, 132, 983, 209);
-		gameOverPanel.add(txtGameover);
-		txtGameover.setColumns(10);
-		
 		GameExit.setBackground(Color.LIGHT_GRAY);
 		GameExit.setFont(new Font("±¼¸²", Font.BOLD, 32));
 		GameExit.setBounds(362, 435, 300, 150);
 		gameOverPanel.add(GameExit);
 
-		YouKillChr = new JTextField();
-		YouKillChr.setBackground(SystemColor.menu);
-		YouKillChr.setEditable(false);
-		YouKillChr.setFont(new Font("±¼¸²", Font.PLAIN, 32));
-		YouKillChr.setForeground(Color.RED);
-		YouKillChr.setHorizontalAlignment(SwingConstants.CENTER);
-		YouKillChr.setBounds(0, 0, 1019, 727);
-		YouKillChr.setText("´ç½ÅÀÌ " + playerName + "À»(¸¦) Á×¿´¾î!!!!!!!!!");
-		gameOverPanel.add(YouKillChr);
-		YouKillChr.setColumns(10);
-
 		mainPanel.setBounds(0, 0, 1024, 768);
 		inputPanel.setBounds(0, 0, 1024, 768);
 		gamePanel.setBounds(0, 0, 1024, 768);
 		gameOverPanel.setBounds(0, 0, 1024, 768);
+		
+		TxTGameOver = new JLabel("GameOver");
+		TxTGameOver.setForeground(Color.RED);
+		TxTGameOver.setFont(new Font("Segoe Print", Font.BOLD, 98));
+		TxTGameOver.setHorizontalAlignment(SwingConstants.CENTER);
+		TxTGameOver.setBounds(17, 132, 982, 209);
+		gameOverPanel.add(TxTGameOver);
+		
+		YouKillChar = new JLabel();
+		YouKillChar.setHorizontalAlignment(SwingConstants.CENTER);
+		YouKillChar.setForeground(Color.RED);
+		YouKillChar.setFont(new Font("±¼¸²", Font.PLAIN, 32));
+		YouKillChar.setBounds(205, 342, 582, 95);
+		gameOverPanel.add(YouKillChar);
 
 		mainPanel.setVisible(true);
 		inputPanel.setVisible(false);
@@ -483,8 +459,9 @@ class Cheak extends Thread {
 		while (true) {
 			cheak = true;
 			if (GameMain.HungerGuage.getValue() <= 0) {
-				GameMain.YouKillChr.setText("´ç½ÅÀÌ " + GameMain.playerName + "À»(¸¦) Á×¿´¾î!!!!!!!!!");
+				GameMain.YouKillChar.setText("´ç½ÅÀÌ " + GameMain.playerName + "À»(¸¦) Á×¿´¾î!!!!!!!!!");
 				GameMain.gamePanel.setVisible(false);
+
 				GameMain.gameOverPanel.setVisible(true);
 				try {
 					SystemThread.sleep(9999999);
