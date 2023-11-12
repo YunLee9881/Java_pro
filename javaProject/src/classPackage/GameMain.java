@@ -12,6 +12,7 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -23,12 +24,11 @@ import javax.swing.UIManager;
 public class GameMain extends JFrame {
 	public JFrame frmTamagochiProject;
 
-	public int weight = 12;
+	static public double weight = 4;
 	static public String playerName = "배고파";
 	public JTextField NAME;
 	public JTextField Weight;
 	public JTextField nameField;
-	public JTextField weightField;
 	public JTextField Like;
 	public JTextField Hunger;
 
@@ -48,6 +48,8 @@ public class GameMain extends JFrame {
 	private JTextField textField;
 	private JTextField nameInput;
 	private JTextField textField_1;
+
+	static public JTextField weightField;
 
 	static JPanel inputPanel;
 	static JPanel mainPanel;
@@ -149,7 +151,7 @@ public class GameMain extends JFrame {
 
 		JLabel lblNewLabel = new JLabel("");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setIcon(new ImageIcon(GameMain.class.getResource("/classPackage/img/characterBabyForm.png")));
+		lblNewLabel.setIcon(new ImageIcon(GameMain.class.getResource("/BabyImg/characterBabyForm.png")));
 		lblNewLabel.setBounds(17, 209, 234, 300);
 		inputPanel.add(lblNewLabel);
 
@@ -188,9 +190,9 @@ public class GameMain extends JFrame {
 		gamePanel.setLayout(null);
 
 		IconImage = new JLabel("");
+		IconImage.setIcon(new ImageIcon(GameMain.class.getResource("/BabyImg/characterBabyFormIcon.png")));
 		IconImage.setBounds(64, 24, 128, 128);
 		IconImage.setHorizontalAlignment(SwingConstants.CENTER);
-		IconImage.setIcon(new ImageIcon(GameMain.class.getResource("/classPackage/img/characterBabyFormIcon.png")));
 		gamePanel.add(IconImage);
 
 		NAME = new JTextField();
@@ -239,15 +241,6 @@ public class GameMain extends JFrame {
 		gamePanel.add(Weight);
 		Weight.setColumns(10);
 
-		weightField = new JTextField();
-		weightField.setBounds(318, 93, 120, 33);
-		weightField.setHorizontalAlignment(SwingConstants.CENTER);
-		weightField.setFont(new Font("한컴 말랑말랑 Bold", Font.BOLD, 18));
-		weightField.setText(weight + "kg");
-		weightField.setEditable(false);
-		weightField.setColumns(10);
-		gamePanel.add(weightField);
-
 		Hunger = new JTextField();
 		Hunger.setBounds(472, 93, 145, 33);
 		Hunger.setText("\uD3EC\uB9CC\uAC10 : ");
@@ -272,7 +265,7 @@ public class GameMain extends JFrame {
 		CharacterImage.setHorizontalAlignment(SwingConstants.CENTER);
 		CharacterImage.setToolTipText("");
 		CharacterImage.setForeground(Color.WHITE);
-		CharacterImage.setIcon(new ImageIcon(GameMain.class.getResource("/classPackage/img/characterBabyForm.png")));
+		CharacterImage.setIcon(new ImageIcon(GameMain.class.getResource("/BabyImg/characterBabyForm.png")));
 		gamePanel.add(CharacterImage);
 
 		SleepBUtton = new JButton("\uC7AC\uC6B0\uAE30");
@@ -335,7 +328,7 @@ public class GameMain extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				CharacterImage.setIcon(
-						new ImageIcon(GameMain.class.getResource("/classPackage/img/characterBabyFormHappy.png")));
+						new ImageIcon(GameMain.class.getResource("/BabyImg/characterBabyFormHappy.png")));
 				int n = LikeGuage.getValue();
 				LikeGuage.setValue(++n);
 				new SSDamButtonThread().start();
@@ -363,6 +356,15 @@ public class GameMain extends JFrame {
 		mainPanel.setBounds(0, 0, 1024, 768);
 		inputPanel.setBounds(0, 0, 1024, 768);
 		gamePanel.setBounds(0, 0, 1024, 768);
+		
+		weightField = new JTextField();
+		weightField.setEditable(false);
+		weightField.setFont(new Font("한컴 말랑말랑 Bold", Font.BOLD, 18));
+		weightField.setColumns(10);
+		weightField.setText(String.format("%.2f", GameMain.weight)+"kg");
+		weightField.setHorizontalAlignment(SwingConstants.CENTER);
+		weightField.setBounds(318, 93, 120, 33);
+		gamePanel.add(weightField);
 		gameOverPanel.setBounds(0, 0, 1024, 768);
 		
 		TxTGameOver = new JLabel("GameOver");
@@ -390,7 +392,7 @@ public class GameMain extends JFrame {
 
 class SystemThread extends Thread {
 	// 반복할 시간
-	int time = 3000;
+	int time = 7777;
 
 	// 게이지 현재값 변수
 	int curLike;
@@ -407,7 +409,6 @@ class SystemThread extends Thread {
 				Thread.sleep(time);
 			} catch (InterruptedException e) {
 			}
-
 			curHung = GameMain.HungerGuage.getValue();
 			curHung -= 3;
 			GameMain.HungerGuage.setValue(curHung);
@@ -417,20 +418,22 @@ class SystemThread extends Thread {
 }
 
 class FeedButtonThread extends Thread {
-	int time = 800;
-
+	int time = 1600;
 	public void run() {
+		GameMain.weight = GameMain.weight +  0.2;
+		
+		GameMain.weightField.setText(String.format("%.1f", GameMain.weight)+"kg");
+		System.out.println(GameMain.weight);
 		try {
 			Thread.sleep(time);
 		} catch (InterruptedException e) {
 		}
-
 		GameMain.FeedButton.setEnabled(true);
 	}
 }
 
 class SSDamButtonThread extends Thread {
-	int time = 3000;
+	int time = 600;
 
 	@Override
 	public void run() {
@@ -439,7 +442,7 @@ class SSDamButtonThread extends Thread {
 		} catch (InterruptedException e) {
 		}
 		GameMain.CharacterImage
-				.setIcon(new ImageIcon(GameMain.class.getResource("/classPackage/img/characterBabyForm.png")));
+				.setIcon(new ImageIcon(GameMain.class.getResource("/BabyImg/characterBabyForm.png")));
 	}
 }
 
@@ -453,7 +456,7 @@ class Cheak extends Thread {
 	@Override
 	public void run() {
 		try {
-			Thread.sleep(3000);
+			Thread.sleep(10000);
 		} catch (InterruptedException e) {
 		}
 		while (true) {
