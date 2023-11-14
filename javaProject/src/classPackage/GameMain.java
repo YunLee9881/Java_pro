@@ -5,14 +5,10 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.SystemColor;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -20,6 +16,13 @@ import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JMenu;
+import javax.swing.JPopupMenu;
+import java.awt.Component;
+import javax.swing.JList;
+import java.awt.Choice;
 
 public class GameMain extends JFrame {
 	public JFrame frmTamagochiProject;
@@ -59,6 +62,15 @@ public class GameMain extends JFrame {
 	static public JButton GameExit;
 	static public JLabel YouKillChar;
 	static public JLabel TxTGameOver;
+	
+	static public String[][] charArray = {
+			{"/BabyImg/characterBabyForm.png", "/BabyImg/characterBabyFormSleep.png", "/BabyImg/characterBabyFormHappy.png", "/BabyImg/characterBabyFormIcon.png"},
+			{"/ChildImg/characterChildForm.png", "/ChildImg/characterChildFormSleep.png", "/ChildImg/characterChildFormHappy.png", "/ChildImg/characterChildFormIcon.png"},
+			{},
+			
+			
+	};
+	
 
 	/**
 	 * Launch the application.
@@ -188,6 +200,15 @@ public class GameMain extends JFrame {
 		gamePanel = new JPanel();
 		frmTamagochiProject.getContentPane().add(gamePanel, BorderLayout.CENTER);
 		gamePanel.setLayout(null);
+		
+		weightField = new JTextField();
+		weightField.setEditable(false);
+		weightField.setFont(new Font("한컴 말랑말랑 Bold", Font.BOLD, 18));
+		weightField.setColumns(10);
+		weightField.setText(String.format("%.2f", GameMain.weight)+"kg");
+		weightField.setHorizontalAlignment(SwingConstants.CENTER);
+		weightField.setBounds(318, 93, 120, 33);
+		gamePanel.add(weightField);
 
 		IconImage = new JLabel("");
 		IconImage.setIcon(new ImageIcon(GameMain.class.getResource("/BabyImg/characterBabyFormIcon.png")));
@@ -356,15 +377,6 @@ public class GameMain extends JFrame {
 		mainPanel.setBounds(0, 0, 1024, 768);
 		inputPanel.setBounds(0, 0, 1024, 768);
 		gamePanel.setBounds(0, 0, 1024, 768);
-		
-		weightField = new JTextField();
-		weightField.setEditable(false);
-		weightField.setFont(new Font("한컴 말랑말랑 Bold", Font.BOLD, 18));
-		weightField.setColumns(10);
-		weightField.setText(String.format("%.2f", GameMain.weight)+"kg");
-		weightField.setHorizontalAlignment(SwingConstants.CENTER);
-		weightField.setBounds(318, 93, 120, 33);
-		gamePanel.add(weightField);
 		gameOverPanel.setBounds(0, 0, 1024, 768);
 		
 		TxTGameOver = new JLabel("GameOver");
@@ -388,11 +400,28 @@ public class GameMain extends JFrame {
 
 		new Cheak();
 	}
+	private static void addPopup(Component component, final JPopupMenu popup) {
+		component.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					showMenu(e);
+				}
+			}
+			public void mouseReleased(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					showMenu(e);
+				}
+			}
+			private void showMenu(MouseEvent e) {
+				popup.show(e.getComponent(), e.getX(), e.getY());
+			}
+		});
+	}
 }
 
 class SystemThread extends Thread {
 	// 반복할 시간
-	int time = 7777;
+	int time = 333;
 
 	// 게이지 현재값 변수
 	int curLike;
