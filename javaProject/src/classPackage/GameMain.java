@@ -2,32 +2,32 @@ package classPackage;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.SystemColor;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JMenu;
-import javax.swing.JPopupMenu;
-import java.awt.Component;
-import javax.swing.JList;
-import java.awt.Choice;
 
 public class GameMain extends JFrame {
 	public JFrame frmTamagochiProject;
 
 	static public double weight = 4;
+	static public int level = 0;
+
 	static public String playerName = "배고파";
 	public JTextField NAME;
 	public JTextField Weight;
@@ -58,19 +58,20 @@ public class GameMain extends JFrame {
 	static JPanel mainPanel;
 	static JPanel gameOverPanel;
 	static JPanel gamePanel;
-	
+
 	static public JButton GameExit;
 	static public JLabel YouKillChar;
 	static public JLabel TxTGameOver;
-	
+
 	static public String[][] charArray = {
-			{"/BabyImg/characterBabyForm.png", "/BabyImg/characterBabyFormSleep.png", "/BabyImg/characterBabyFormHappy.png", "/BabyImg/characterBabyFormIcon.png"},
-			{"/ChildImg/characterChildForm.png", "/ChildImg/characterChildFormSleep.png", "/ChildImg/characterChildFormHappy.png", "/ChildImg/characterChildFormIcon.png"},
-			{},
-			
-			
-	};
-	
+			// I Index 0. baby, 1. child, 2. Fat
+			// J Index 0. default, 1. sleep, 2. happy, 3. Icon
+			{ "/BabyImg/characterBabyForm.png", "/BabyImg/characterBabyFormSleep.png",
+					"/BabyImg/characterBabyFormHappy.png", "/BabyImg/characterBabyFormIcon.png" },
+			{ "/ChildImg/characterChildForm.png", "/ChildImg/characterChildFormSleep.png",
+					"/ChildImg/characterChildFormHappy.png", "/ChildImg/characterChildFormIcon.png" },
+			{ "/FatImg/characterFatForm.png", "/FatImg/characterFatFormSleep.png", "/FatImg/characterFatFormHappy.png",
+					"/FatImg/characterFatFormIcon.png" } };
 
 	/**
 	 * Launch the application.
@@ -102,8 +103,6 @@ public class GameMain extends JFrame {
 	private void initialize() {
 
 		SystemThread st = new SystemThread();
-		FeedButtonThread fbt = new FeedButtonThread();
-		Cheak cheak = new Cheak();
 
 		frmTamagochiProject = new JFrame();
 		frmTamagochiProject.setResizable(false);
@@ -163,7 +162,7 @@ public class GameMain extends JFrame {
 
 		JLabel lblNewLabel = new JLabel("");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setIcon(new ImageIcon(GameMain.class.getResource("/BabyImg/characterBabyForm.png")));
+		lblNewLabel.setIcon(new ImageIcon(GameMain.class.getResource(charArray[level][3])));
 		lblNewLabel.setBounds(17, 209, 234, 300);
 		inputPanel.add(lblNewLabel);
 
@@ -200,18 +199,18 @@ public class GameMain extends JFrame {
 		gamePanel = new JPanel();
 		frmTamagochiProject.getContentPane().add(gamePanel, BorderLayout.CENTER);
 		gamePanel.setLayout(null);
-		
+
 		weightField = new JTextField();
 		weightField.setEditable(false);
 		weightField.setFont(new Font("한컴 말랑말랑 Bold", Font.BOLD, 18));
 		weightField.setColumns(10);
-		weightField.setText(String.format("%.2f", GameMain.weight)+"kg");
+		weightField.setText(String.format("%.2f", GameMain.weight) + "kg");
 		weightField.setHorizontalAlignment(SwingConstants.CENTER);
 		weightField.setBounds(318, 93, 120, 33);
 		gamePanel.add(weightField);
 
 		IconImage = new JLabel("");
-		IconImage.setIcon(new ImageIcon(GameMain.class.getResource("/BabyImg/characterBabyFormIcon.png")));
+		IconImage.setIcon(new ImageIcon(GameMain.class.getResource(charArray[level][3])));
 		IconImage.setBounds(64, 24, 128, 128);
 		IconImage.setHorizontalAlignment(SwingConstants.CENTER);
 		gamePanel.add(IconImage);
@@ -286,7 +285,7 @@ public class GameMain extends JFrame {
 		CharacterImage.setHorizontalAlignment(SwingConstants.CENTER);
 		CharacterImage.setToolTipText("");
 		CharacterImage.setForeground(Color.WHITE);
-		CharacterImage.setIcon(new ImageIcon(GameMain.class.getResource("/BabyImg/characterBabyForm.png")));
+		CharacterImage.setIcon(new ImageIcon(GameMain.class.getResource(charArray[level][0])));
 		gamePanel.add(CharacterImage);
 
 		SleepBUtton = new JButton("\uC7AC\uC6B0\uAE30");
@@ -320,7 +319,7 @@ public class GameMain extends JFrame {
 						lv -= 8;
 						LikeGuage.setValue(lv);
 					}
-					new FeedButtonThread().start();
+					new FeedButtonThread();
 
 					FeedButton.setEnabled(false);
 				}
@@ -348,11 +347,8 @@ public class GameMain extends JFrame {
 		SSDAMButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				CharacterImage.setIcon(
-						new ImageIcon(GameMain.class.getResource("/BabyImg/characterBabyFormHappy.png")));
-				int n = LikeGuage.getValue();
-				LikeGuage.setValue(++n);
-				new SSDamButtonThread().start();
+				
+				new SSDamButtonThread();
 			}
 		});
 		SSDAMButton.setFont(new Font("HY엽서M", Font.BOLD, 25));
@@ -378,14 +374,14 @@ public class GameMain extends JFrame {
 		inputPanel.setBounds(0, 0, 1024, 768);
 		gamePanel.setBounds(0, 0, 1024, 768);
 		gameOverPanel.setBounds(0, 0, 1024, 768);
-		
+
 		TxTGameOver = new JLabel("GameOver");
 		TxTGameOver.setForeground(Color.RED);
 		TxTGameOver.setFont(new Font("Segoe Print", Font.BOLD, 98));
 		TxTGameOver.setHorizontalAlignment(SwingConstants.CENTER);
 		TxTGameOver.setBounds(17, 132, 982, 209);
 		gameOverPanel.add(TxTGameOver);
-		
+
 		YouKillChar = new JLabel();
 		YouKillChar.setHorizontalAlignment(SwingConstants.CENTER);
 		YouKillChar.setForeground(Color.RED);
@@ -399,29 +395,13 @@ public class GameMain extends JFrame {
 		gameOverPanel.setVisible(false);
 
 		new Cheak();
-	}
-	private static void addPopup(Component component, final JPopupMenu popup) {
-		component.addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent e) {
-				if (e.isPopupTrigger()) {
-					showMenu(e);
-				}
-			}
-			public void mouseReleased(MouseEvent e) {
-				if (e.isPopupTrigger()) {
-					showMenu(e);
-				}
-			}
-			private void showMenu(MouseEvent e) {
-				popup.show(e.getComponent(), e.getX(), e.getY());
-			}
-		});
+		new levelUp();
 	}
 }
 
 class SystemThread extends Thread {
 	// 반복할 시간
-	int time = 333;
+	int time = 3333;
 
 	// 게이지 현재값 변수
 	int curLike;
@@ -447,12 +427,20 @@ class SystemThread extends Thread {
 }
 
 class FeedButtonThread extends Thread {
-	int time = 1600;
+	int time = 160;
+
+	
+	
+	public FeedButtonThread() {
+		start();
+	}
+
+
+
 	public void run() {
-		GameMain.weight = GameMain.weight +  0.2;
-		
-		GameMain.weightField.setText(String.format("%.1f", GameMain.weight)+"kg");
-		System.out.println(GameMain.weight);
+		GameMain.weight = GameMain.weight + 0.2;
+
+		GameMain.weightField.setText(String.format("%.1f", GameMain.weight) + "kg");
 		try {
 			Thread.sleep(time);
 		} catch (InterruptedException e) {
@@ -464,14 +452,25 @@ class FeedButtonThread extends Thread {
 class SSDamButtonThread extends Thread {
 	int time = 600;
 
+	public SSDamButtonThread() {
+		start();
+	}
+	
 	@Override
 	public void run() {
+		
+		int n = GameMain.LikeGuage.getValue();
+		GameMain.LikeGuage.setValue(++n);
+		
+		GameMain.CharacterImage.setIcon(new ImageIcon(GameMain.class.getResource(GameMain.charArray[GameMain.level][2])));
 		try {
 			Thread.sleep(time);
 		} catch (InterruptedException e) {
+			System.out.println("???");
 		}
+		
 		GameMain.CharacterImage
-				.setIcon(new ImageIcon(GameMain.class.getResource("/BabyImg/characterBabyForm.png")));
+				.setIcon(new ImageIcon(GameMain.class.getResource(GameMain.charArray[GameMain.level][0])));
 	}
 }
 
@@ -489,22 +488,44 @@ class Cheak extends Thread {
 		} catch (InterruptedException e) {
 		}
 		while (true) {
-			cheak = true;
 			if (GameMain.HungerGuage.getValue() <= 0) {
 				GameMain.YouKillChar.setText("당신이 " + GameMain.playerName + "을(를) 죽였어!!!!!!!!!");
 				GameMain.gamePanel.setVisible(false);
-
 				GameMain.gameOverPanel.setVisible(true);
 				try {
 					SystemThread.sleep(9999999);
 				} catch (InterruptedException e) {
-					e.printStackTrace();
 				}
 
 			}
-			System.out.println(GameMain.HungerGuage.getValue());
+
 		}
 
 	}
 
+}
+
+class levelUp extends Thread {
+	levelUp() {
+		start();
+	}
+
+	@Override
+	public void run() {
+		while (true) {
+			if ((int) GameMain.weight >= 4 && (int) GameMain.weight < 8)
+				GameMain.level = 0;
+			else if ((int) GameMain.weight >= 8 && (int) GameMain.weight < 15)
+				GameMain.level = 1;
+			else if ((int) GameMain.weight >= 15)
+				GameMain.level = 2;
+
+			if(GameMain.CharacterImage != null)
+			GameMain.CharacterImage
+					.setIcon(new ImageIcon(GameMain.class.getResource(GameMain.charArray[GameMain.level][0])));
+			;
+			GameMain.IconImage
+					.setIcon(new ImageIcon(GameMain.class.getResource(GameMain.charArray[GameMain.level][3])));
+		}
+	}
 }
