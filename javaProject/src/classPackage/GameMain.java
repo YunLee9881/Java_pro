@@ -9,6 +9,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -75,6 +78,13 @@ public class GameMain extends JFrame {
 					"/ChildImg/characterChildFormHappy.png", "/ChildImg/characterChildFormIcon.png" },
 			{ "/FatImg/characterFatForm.png", "/FatImg/characterFatFormSleep.png", "/FatImg/characterFatFormHappy.png",
 					"/FatImg/characterFatFormIcon.png" } };
+	private JPanel loadPanel;
+	private JTextField warning;
+	private JLabel charImage;
+	private JTextField beforeCharInputText;
+	private JTextField beforeNameInput;
+	private JButton beforeNameCheak;
+	private JLabel label;
 
 	/**
 	 * Launch the application.
@@ -118,6 +128,8 @@ public class GameMain extends JFrame {
 		mainPanel.setLayout(null);
 
 		txtVTamagochi = new JTextField();
+		txtVTamagochi.setBackground(Color.WHITE);
+		txtVTamagochi.setEditable(false);
 		txtVTamagochi.setFont(new Font("HYÇìµå¶óÀÎM", Font.BOLD, 52));
 		txtVTamagochi.setText("V - Tamagochi");
 		txtVTamagochi.setHorizontalAlignment(SwingConstants.CENTER);
@@ -141,10 +153,15 @@ public class GameMain extends JFrame {
 		button.setBounds(387, 486, 250, 50);
 		mainPanel.add(button);
 
-		JButton button_1 = new JButton("\uC885\uB8CC");
-		button_1.setFont(new Font("ÈÞ¸Õ¸ðÀ½T", Font.BOLD, 22));
-		button_1.setBounds(387, 572, 250, 50);
-		mainPanel.add(button_1);
+		JButton exit = new JButton("\uC885\uB8CC");
+		exit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				System.exit(0);
+			}
+		});
+		exit.setFont(new Font("ÈÞ¸Õ¸ðÀ½T", Font.BOLD, 22));
+		exit.setBounds(387, 572, 250, 50);
+		mainPanel.add(exit);
 
 		inputPanel = new JPanel();
 		frmTamagochiProject.getContentPane().add(inputPanel, BorderLayout.CENTER);
@@ -168,6 +185,7 @@ public class GameMain extends JFrame {
 		inputPanel.add(lblNewLabel);
 
 		textField = new JTextField();
+		textField.setEditable(false);
 		textField.setFont(new Font("±¼¸²", Font.BOLD, 32));
 		textField.setText("\uCE90\uB9AD\uD130\uC758 \uC774\uB984\uC744 \uC785\uB825\uD574\uC8FC\uC138\uC694!");
 		textField.setHorizontalAlignment(SwingConstants.CENTER);
@@ -181,6 +199,12 @@ public class GameMain extends JFrame {
 		nameInput.setBounds(268, 366, 512, 93);
 		inputPanel.add(nameInput);
 		nameInput.setColumns(10);
+		
+		label = new JLabel("");
+		label.setIcon(new ImageIcon(GameMain.class.getResource("/objectImg/charEvolution.png")));
+		label.setHorizontalAlignment(SwingConstants.CENTER);
+		label.setBounds(128, 500, 768, 192);
+		inputPanel.add(label);
 
 		JButton nameCheckButton = new JButton("\uD655\uC778");
 		nameCheckButton.addMouseListener(new MouseAdapter() {
@@ -197,6 +221,50 @@ public class GameMain extends JFrame {
 		nameCheckButton.setBounds(778, 366, 93, 93);
 		inputPanel.add(nameCheckButton);
 
+		loadPanel = new JPanel();
+		frmTamagochiProject.getContentPane().add(loadPanel, BorderLayout.CENTER);
+		loadPanel.setLayout(null);
+		
+		warning = new JTextField();
+		warning.setText("\u203B\uC815\uD655\uD558\uAC8C \uC801\uC5B4\uC8FC\uC138\uC694!");
+		warning.setHorizontalAlignment(SwingConstants.CENTER);
+		warning.setForeground(Color.RED);
+		warning.setFont(new Font("±¼¸²", Font.BOLD, 18));
+		warning.setEditable(false);
+		warning.setColumns(0);
+		warning.setBackground(Color.WHITE);
+		warning.setBounds(268, 454, 600, 35);
+		loadPanel.add(warning);
+		
+		charImage = new JLabel("");
+		charImage.setIcon(new ImageIcon(GameMain.class.getResource("/BabyImg/characterBabyFormIcon.png")));
+		charImage.setHorizontalAlignment(SwingConstants.CENTER);
+		charImage.setBounds(17, 209, 234, 300);
+		loadPanel.add(charImage);
+		
+		beforeCharInputText = new JTextField();
+		beforeCharInputText.setText("\uC804\uC5D0 \uD50C\uB808\uC774\uD558\uB358 \uCE90\uB9AD\uD130\uC758 \uC774\uB984\uC744 \uC785\uB825\uD574\uC8FC\uC138\uC694!");
+		beforeCharInputText.setHorizontalAlignment(SwingConstants.CENTER);
+		beforeCharInputText.setFont(new Font("±¼¸²", Font.BOLD, 24));
+		beforeCharInputText.setEditable(false);
+		beforeCharInputText.setColumns(10);
+		beforeCharInputText.setBounds(268, 271, 600, 93);
+		loadPanel.add(beforeCharInputText);
+		
+		beforeNameInput = new JTextField();
+		beforeNameInput.setHorizontalAlignment(SwingConstants.CENTER);
+		beforeNameInput.setFont(new Font("±¼¸²", Font.BOLD, 32));
+		beforeNameInput.setColumns(10);
+		beforeNameInput.setBounds(268, 366, 512, 93);
+		loadPanel.add(beforeNameInput);
+		
+		beforeNameCheak = new JButton("\uD655\uC778");
+		beforeNameCheak.setFont(new Font("±¼¸²", Font.BOLD, 24));
+		beforeNameCheak.setBounds(778, 366, 93, 93);
+		loadPanel.add(beforeNameCheak);
+
+		
+		
 		gamePanel = new JPanel();
 		frmTamagochiProject.getContentPane().add(gamePanel, BorderLayout.CENTER);
 		gamePanel.setLayout(null);
@@ -219,7 +287,7 @@ public class GameMain extends JFrame {
 		NAME = new JTextField();
 		NAME.setBounds(202, 60, 116, 33);
 		NAME.setHorizontalAlignment(SwingConstants.CENTER);
-		NAME.setBackground(SystemColor.desktop);
+		NAME.setBackground(Color.WHITE);
 		NAME.setEditable(false);
 		NAME.setFont(new Font("±¼¸²", Font.BOLD, 18));
 		NAME.setText("\uC774\uB984 :");
@@ -245,7 +313,7 @@ public class GameMain extends JFrame {
 
 		LikeGuage = new JProgressBar();
 		LikeGuage.setBounds(632, 60, 300, 33);
-		LikeGuage.setBackground(SystemColor.desktop);
+		LikeGuage.setBackground(Color.WHITE);
 		LikeGuage.setFont(new Font("ÈÞ¸Õ¸ðÀ½T", Font.BOLD, 18));
 		LikeGuage.setForeground(Color.RED);
 		LikeGuage.setStringPainted(true);
@@ -255,7 +323,7 @@ public class GameMain extends JFrame {
 		Weight = new JTextField();
 		Weight.setBounds(202, 93, 116, 33);
 		Weight.setHorizontalAlignment(SwingConstants.CENTER);
-		Weight.setBackground(SystemColor.desktop);
+		Weight.setBackground(Color.WHITE);
 		Weight.setEditable(false);
 		Weight.setFont(new Font("±¼¸²", Font.BOLD, 18));
 		Weight.setText("\uBAB8\uBB34\uAC8C :");
@@ -263,6 +331,7 @@ public class GameMain extends JFrame {
 		Weight.setColumns(10);
 
 		Hunger = new JTextField();
+		Hunger.setBackground(Color.WHITE);
 		Hunger.setBounds(472, 93, 145, 33);
 		Hunger.setText("\uD3EC\uB9CC\uAC10 : ");
 		Hunger.setFont(new Font("±¼¸²", Font.BOLD, 18));
@@ -273,14 +342,14 @@ public class GameMain extends JFrame {
 		HungerGuage = new JProgressBar();
 		HungerGuage.setBounds(632, 93, 300, 33);
 		HungerGuage.setFont(new Font("ÈÞ¸Õ¸ðÀ½T", Font.BOLD, 18));
-		HungerGuage.setBackground(SystemColor.desktop);
+		HungerGuage.setBackground(Color.WHITE);
 		HungerGuage.setForeground(new Color(102, 51, 51));
 		HungerGuage.setStringPainted(true);
 		HungerGuage.setValue(40);
 		gamePanel.add(HungerGuage);
 
 		CharacterImage = new JLabel("");
-		CharacterImage.setIcon(new ImageIcon(GameMain.class.getResource("/BabyImg/characterBabyForm.png")));
+		CharacterImage.setIcon(new ImageIcon(GameMain.class.getResource(charArray[level][3])));
 		CharacterImage.setBounds(43, 163, 916, 350);
 		CharacterImage.setLabelFor(CharacterImage);
 		CharacterImage.setBackground(Color.WHITE);
@@ -291,12 +360,10 @@ public class GameMain extends JFrame {
 
 		SleepBUtton = new JButton("\uC7AC\uC6B0\uAE30");
 		SleepBUtton.setBounds(50, 550, 160, 130);
-		SleepBUtton.addMouseListener(new MouseAdapter() {
+		SleepBUtton.addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
-				int Hv = HungerGuage.getValue();
-				Hv -= 10;
-				HungerGuage.setValue(Hv);
+			public void actionPerformed(ActionEvent e) {
+				new SleepThread();
 			}
 		});
 		SleepBUtton.setFont(new Font("HY¿±¼­M", Font.BOLD, 25));
@@ -333,7 +400,7 @@ public class GameMain extends JFrame {
 		CleanButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (poopProduce.isPoop) {
-					poopLabel.setIcon(new ImageIcon(GameMain.class.getResource(null)));
+					poopLabel.setVisible(false);
 					int n = LikeGuage.getValue();
 					n += 10;
 					LikeGuage.setValue(n);
@@ -345,7 +412,7 @@ public class GameMain extends JFrame {
 		CleanButton.setFont(new Font("HY¿±¼­M", Font.BOLD, 25));
 		gamePanel.add(CleanButton);
 
-		InformButton = new JButton("\uC124\uC815");
+		InformButton = new JButton("\uC800\uC7A5");
 		InformButton.setBounds(790, 550, 160, 130);
 		InformButton.setFont(new Font("HY¿±¼­M", Font.BOLD, 25));
 		gamePanel.add(InformButton);
@@ -378,9 +445,7 @@ public class GameMain extends JFrame {
 		GameExit.setBounds(362, 435, 300, 150);
 		gameOverPanel.add(GameExit);
 
-		mainPanel.setBounds(0, 0, 1024, 768);
-		inputPanel.setBounds(0, 0, 1024, 768);
-		gamePanel.setBounds(0, 0, 1024, 768);
+		
 
 		poopLabel = new JLabel("");
 		poopLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -401,14 +466,30 @@ public class GameMain extends JFrame {
 		YouKillChar.setFont(new Font("±¼¸²", Font.PLAIN, 32));
 		YouKillChar.setBounds(205, 342, 582, 95);
 		gameOverPanel.add(YouKillChar);
+		
+		
+		
 
+		
+		
+		
+		
 		mainPanel.setVisible(true);
 		inputPanel.setVisible(false);
+		loadPanel.setVisible(false);
 		gamePanel.setVisible(false);
 		gameOverPanel.setVisible(false);
-
+		
+		
+		mainPanel.setBounds(0, 0, 1024, 768);
+		inputPanel.setBounds(0, 0, 1024, 768);
+		loadPanel.setBounds(0, 0, 1024, 768);
+		gamePanel.setBounds(0, 0, 1024, 768);
+		gameOverPanel.setBounds(0, 0, 1024, 768);
+		
 		Check check = new Check();
 		new levelUp();
+		new poopProduce();
 	}
 }
 
@@ -440,7 +521,7 @@ class SystemThread extends Thread {
 }
 
 class FeedButtonThread extends Thread {
-	int time = 1600;
+	int time = 600;
 
 	public FeedButtonThread() {
 		start();
@@ -516,9 +597,9 @@ class levelUp extends Thread {
 
 	@Override
 	public void run() {
-		if ((int) GameMain.weight >= 4 && (int) GameMain.weight < 8)
+		if (((int) GameMain.weight >= 4 && (int) GameMain.weight < 8))
 			GameMain.level = 0;
-		else if ((int) GameMain.weight >= 8 && (int) GameMain.weight < 15)
+		else if (((int) GameMain.weight >= 8 && (int) GameMain.weight < 15))
 			GameMain.level = 1;
 		else if ((int) GameMain.weight >= 15)
 			GameMain.level = 2;
@@ -526,7 +607,7 @@ class levelUp extends Thread {
 		if (GameMain.CharacterImage != null)
 			GameMain.CharacterImage
 					.setIcon(new ImageIcon(GameMain.class.getResource(GameMain.charArray[GameMain.level][0])));
-		;
+
 		GameMain.IconImage.setIcon(new ImageIcon(GameMain.class.getResource(GameMain.charArray[GameMain.level][3])));
 
 	}
@@ -542,29 +623,74 @@ class poopProduce extends Thread {
 
 	@Override
 	public void run() {
+		GameMain.poopLabel.setIcon(new ImageIcon(GameMain.class.getResource("/objectImg/poop.png")));
+		GameMain.poopLabel.setVisible(false);
 		while (true) {
 			coolTime = (int) (Math.random() * 15000) + 15000;
+			System.out.println("??");
 			try {
 				Thread.sleep(coolTime);
 			} catch (InterruptedException e) {
 			}
 			if (!isPoop) {
-				GameMain.poopLabel.setIcon(new ImageIcon(GameMain.class.getResource(GameMain.poopAddress)));
-				
-				Timer timer = new Timer();
-				TimerTask timerTask = new TimerTask() {
-					
-					@Override
-					public void run() {
-							int lv = GameMain.LikeGuage.getValue();
-							lv -= 15;
-							GameMain.LikeGuage.setValue(lv);
-					}
-				};
-				timer.schedule(timerTask, 5000, 5000);
-				
+				GameMain.poopLabel.setVisible(true);
 				isPoop = true;
 			}
 		}
 	}
+}
+
+class SleepThread extends Thread{
+	int time = 1000;
+	
+	SleepThread(){
+		start();
+	}
+	
+	public void run() {
+		GameMain.SleepBUtton.setEnabled(false);
+		GameMain.FeedButton.setEnabled(false);
+		GameMain.SSDAMButton.setEnabled(false);
+		GameMain.CharacterImage
+		.setIcon(new ImageIcon(GameMain.class.getResource(GameMain.charArray[GameMain.level][1])));
+		for (int i = 0; i < 5; i++) {
+			try {
+				Thread.sleep(time);
+				int Hv = GameMain.HungerGuage.getValue();
+				Hv -= 3;
+				GameMain.HungerGuage.setValue(Hv);
+				int Lv = GameMain.LikeGuage.getValue();
+				Lv += 2;
+				GameMain.LikeGuage.setValue(Lv);
+			} catch (InterruptedException e) {
+			}
+			
+		}
+		
+		GameMain.SleepBUtton.setEnabled(true);
+		GameMain.FeedButton.setEnabled(true);
+		GameMain.SSDAMButton.setEnabled(true);
+		GameMain.CharacterImage
+		.setIcon(new ImageIcon(GameMain.class.getResource(GameMain.charArray[GameMain.level][0])));
+	}
+}
+
+class poopCheak extends Thread {
+	int time = 5000;
+
+	@Override
+	public void run() {
+		while(true) {
+		try {
+			Thread.sleep(time);
+		} catch (InterruptedException e) {
+		}
+		if (poopProduce.isPoop == true) {
+			int n = GameMain.LikeGuage.getValue();
+			n -= 10;
+			GameMain.LikeGuage.setValue(n);
+		}
+		}
+	}
+
 }
