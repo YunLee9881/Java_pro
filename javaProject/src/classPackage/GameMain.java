@@ -11,9 +11,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.sql.Statement;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -25,6 +26,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 public class GameMain extends JFrame {
+
 	public JFrame frmTamagochiProject;
 
 	static public double weight = 4;
@@ -85,6 +87,14 @@ public class GameMain extends JFrame {
 	private JTextField beforeNameInput;
 	private JButton beforeNameCheak;
 	private JLabel label;
+	
+	
+	//sql code
+	static String jdbcUrl = "jdbc:oracle:thin:@localhost:1521:XE";
+    static String driver = "oracle.jdbc.driver.OracleDriver";
+    static String user = "lsm";
+    static String password = "1234";
+
 
 	/**
 	 * Launch the application.
@@ -114,6 +124,17 @@ public class GameMain extends JFrame {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		
+		//sql
+
+		 try {
+	            // JDBC 드라이버 로드
+	            Class.forName(driver);
+	            System.out.println("Oracle 드라이버 성공");
+
+	        } catch (ClassNotFoundException e) {
+	            e.printStackTrace();
+	        }
 
 		frmTamagochiProject = new JFrame();
 		frmTamagochiProject.setResizable(false);
@@ -149,6 +170,12 @@ public class GameMain extends JFrame {
 		mainPanel.add(btnNewButton);
 
 		JButton button = new JButton("\uBD88\uB7EC\uC624\uAE30");
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				mainPanel.setVisible(false);
+				loadPanel.setVisible(true);
+			}
+		});
 		button.setFont(new Font("휴먼모음T", Font.BOLD, 22));
 		button.setBounds(387, 486, 250, 50);
 		mainPanel.add(button);
@@ -210,8 +237,21 @@ public class GameMain extends JFrame {
 		nameCheckButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				
 				inputPanel.setVisible(false);
 				playerName = nameInput.getText();
+				Connection connection = null;
+				try {
+					connection = DriverManager.getConnection(jdbcUrl, user, password);
+				} catch (SQLException e2) {
+				}
+				try {
+					insertData(connection, playerName);
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+				
+				
 				nameField.setText(playerName);
 				gamePanel.setVisible(true);
 				SystemThread st = new SystemThread();
@@ -259,6 +299,29 @@ public class GameMain extends JFrame {
 		loadPanel.add(beforeNameInput);
 		
 		beforeNameCheak = new JButton("\uD655\uC778");
+		beforeNameCheak.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Connection connection = null;
+				
+				
+				
+				loadPanel.setVisible(false);
+				playerName = beforeNameInput.getText();
+				
+				try {
+					connection = DriverManager.getConnection(jdbcUrl, user, password);
+				} catch (SQLException e3) {
+				}
+				try {
+					
+					selectData(connection , beforeNameInput.getText());
+				} catch (SQLException e1) {
+				}
+				nameField.setText(playerName);
+				gamePanel.setVisible(true);
+				SystemThread st = new SystemThread();
+			}
+		});
 		beforeNameCheak.setFont(new Font("굴림", Font.BOLD, 24));
 		beforeNameCheak.setBounds(778, 366, 93, 93);
 		loadPanel.add(beforeNameCheak);
@@ -413,6 +476,24 @@ public class GameMain extends JFrame {
 		gamePanel.add(CleanButton);
 
 		InformButton = new JButton("\uC800\uC7A5");
+		InformButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Connection connection = null;
+				try {
+					connection = DriverManager.getConnection(jdbcUrl, user, password);
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				try {
+					updateData(connection, playerName);
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+			}
+		});
 		InformButton.setBounds(790, 550, 160, 130);
 		InformButton.setFont(new Font("HY엽서M", Font.BOLD, 25));
 		gamePanel.add(InformButton);
@@ -491,6 +572,85 @@ public class GameMain extends JFrame {
 		new levelUp();
 		new poopProduce();
 	}
+	
+	
+	public static void createTable(Connection connection) throws SQLException {
+        // Statement 객체 생성
+        try (Statement statement = connection.createStatement()) {
+            // 테이블 존재 확인 쿼리
+            ResultSet tables = connection.getMetaData().getTables(null, null, "playerData", null);
+            if (!tables.next()) {
+                // 테이블 생성 쿼리
+                String createTableSQL = "CREATE TABLE playerData (" +
+                        "name VARCHAR2(50)," +
+                        "love NUMBER," +
+                        "weight NUMBER)";
+
+                // 테이블 생성
+                statement.execute(createTableSQL);
+                System.out.println("Table 'playerData' created successfully");
+            } else {
+                System.out.println("Table 'playerData' already exists. No need to create a new table.");
+            }
+        }
+    }
+    
+    // 데이터 삽입 메서드
+    public static void insertData(Connection connection, String targetName) throws SQLException {
+        // INSERT 쿼리
+        String insertSQL = "INSERT INTO playerData (name, love, weight) VALUES (?, ?, ?)";
+
+        // PreparedStatement 객체 생성
+        try (PreparedStatement insertStatement = connection.prepareStatement(insertSQL)) {
+            // 데이터 삽입
+            insertStatement.setString(1, targetName);
+            insertStatement.setInt(2, GameMain.LikeGuage.getValue());
+            insertStatement.setDouble(3, GameMain.weight);
+            insertStatement.executeUpdate();
+            System.out.println("Data inserted successfully");
+        }
+    }
+    
+    // 데이터 업데이트 메서드
+    public static void updateData(Connection connection, String targetName) throws SQLException {
+        // UPDATE 쿼리
+        String updateSQL = "UPDATE playerData SET love = ?, weight = ? WHERE name = ?";
+
+        // PreparedStatement 객체 생성
+        try (PreparedStatement updateStatement = connection.prepareStatement(updateSQL)) {
+            // 데이터 업데이트
+            updateStatement.setInt(1, LikeGuage.getValue());
+            updateStatement.setDouble(2, weight);
+            updateStatement.setString(3, targetName);
+            updateStatement.executeUpdate();
+            System.out.println("Data updated successfully");
+        }
+    }
+    
+    // 데이터 조회 메서드
+    public static void selectData(Connection connection, String targetName) throws SQLException {
+        // 데이터 조회 쿼리
+        String selectSQL = "SELECT * FROM playerData WHERE name = ?";
+
+        // PreparedStatement 객체 생성
+        try (PreparedStatement selectStatement = connection.prepareStatement(selectSQL)) {
+            // 쿼리 실행
+            selectStatement.setString(1, targetName);
+            ResultSet rs = selectStatement.executeQuery();
+
+            // 결과 출력
+            while (rs.next()) {
+                String name = rs.getString("name");
+                GameMain.LikeGuage.setValue( rs.getInt("love"));
+                System.out.println(rs.getDouble("weight"));
+                GameMain.weight = rs.getDouble("weight");
+                GameMain.weightField.setText(String.format("%.1f", GameMain.weight) + "kg");
+                
+                new levelUp();
+            }
+            
+        }
+    }
 }
 
 class SystemThread extends Thread {
@@ -582,9 +742,7 @@ class Check extends Thread {
 				GameMain.gamePanel.setVisible(false);
 				GameMain.gameOverPanel.setVisible(true);
 			}
-			System.out.println(GameMain.HungerGuage.getValue());
 		}
-
 	}
 
 }
@@ -694,3 +852,4 @@ class poopCheak extends Thread {
 	}
 
 }
+
