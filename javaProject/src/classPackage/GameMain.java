@@ -201,7 +201,7 @@ public class GameMain extends JFrame {
 		textField_1.setBackground(Color.WHITE);
 		textField_1.setColumns(0);
 		textField_1.setEditable(false);
-		textField_1.setText("\u203B\uB108\uBB34 \uAE38\uAC8C \uC4F0\uC9C0 \uB9D0\uC544\uC8FC\uC138\uC694");
+		textField_1.setText("\u203B10\uC790 \uC774\uB0B4\uB85C \uC801\uC5B4\uC8FC\uC138\uC694");
 		textField_1.setBounds(268, 454, 600, 35);
 		inputPanel.add(textField_1);
 
@@ -737,11 +737,12 @@ class Check extends Thread {
 	public void run() {
 		while (true) {
 			if (GameMain.HungerGuage.getValue() <= 0 || GameMain.LikeGuage.getValue() <= 0) {
-				System.out.print("아니");
 				GameMain.YouKillChar.setText("당신이 " + GameMain.playerName + "을(를) 죽였어!!!!!!!!!");
 				GameMain.gamePanel.setVisible(false);
 				GameMain.gameOverPanel.setVisible(true);
 			}
+			System.out.println(GameMain.HungerGuage.getValue());
+			System.out.println(GameMain.LikeGuage.getValue());
 		}
 	}
 
@@ -820,6 +821,7 @@ class SleepThread extends Thread{
 				int Lv = GameMain.LikeGuage.getValue();
 				Lv += 2;
 				GameMain.LikeGuage.setValue(Lv);
+				new Check();
 			} catch (InterruptedException e) {
 			}
 			
